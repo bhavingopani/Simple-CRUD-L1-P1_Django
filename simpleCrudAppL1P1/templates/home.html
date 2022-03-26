@@ -1,0 +1,74 @@
+{% comment %} listing of Full name(f_name + l_name), email, email_verification_status(verified/pending), action(edit/delete) {% endcomment %}
+{% comment %} - if user directly tries to check the go to home page and see the listing ./.. then he/she should be redirected to loginUser page {% endcomment %}
+{% comment %} when clicked on create user - redirect it to Create user page {% endcomment %}
+{% comment %} when clicked on logout button - logout and take the user to login page {% endcomment %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>User Details</title>
+  </head>
+  <body>
+
+
+<button type="button" class="btn btn-primary">Create User</button>
+<button type="button" class="btn btn-primary">Logout</button> 
+
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Email_Verification_Status</th>
+        <th scope="col">Edit/Delete User</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+          {% comment %} this is not the number this will be db id number {% endcomment %}
+        <th scope="row">1</th>
+        <td>Rajesh</td>
+        <td>Patel</td>
+        <td>r_patel@gmail.com</td>
+        <td>Vrified</td>
+        <td>
+            <button type="button" class="btn btn-primary">Edit</button>
+            <button type="button" class="btn btn-primary">Delet</button>
+        </td>
+      </tr>
+      <tr>
+          {% comment %} this is not the number this will be db id number {% endcomment %}
+        <th scope="row">2</th>
+        <td>Mahesh</td>
+        <td>Bhatt</td>
+        <td>maheshbhatt@gmail.com</td>
+        <td>Pending</td>
+        <td>
+            <button type="button" class="btn btn-primary">Edit</button>
+            <button type="button" class="btn btn-primary">Delet</button>
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+
+
+   
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+  </body>
+</html>
+
+
+
+

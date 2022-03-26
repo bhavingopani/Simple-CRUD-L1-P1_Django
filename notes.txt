@@ -1,0 +1,156 @@
+code with harry tutorial django
+
+installing django after installing python - check if all workng fine first like python v and pip
+
+install django
+
+pip install django
+pip install django --upgrade 
+
+pip install django==3.0.4  (installing older version -- of ourse latest is 4 and above but the harry has 3 so..)
+
+to make a project
+    django-admin startproject Hello    #this is the name of the project
+to start the server
+    python manage.py runserver
+
+to check all commands
+    python manage.py
+from those commands you can see startapp
+    python manage.py startapp home     # here home is the name of the app
+
+    #so here hello folder is the project and home is the App 
+        #there is settings files in the Hello or project folder -- that will help to show where your templates be stored
+                                                                    That will also tell what database you will be using. By default its sqlite3
+                                                                    Server Tima and all
+
+There is no urls.py in App which is home folder that we have created
+    So make urls.py
+
+
+
+# Static file concept and Template concept in django
+
+    Static file (Created folder)
+        these are files that anyone can see on your server by checking or coming to urls    
+            YOU CAN CHECK THAT STATIC URLS THINGS in Settings.py
+        all tge static file will be here.. like txt or images etc.
+    Templates   (Created folder)
+
+
+login to admin  
+    /admin     -- you will have some errors from django and that django error page will come But after below commands.. you will have different errors
+                    you will have errors like no such table when you try to login.
+
+to check if any changes in the database or schema or anything  -- we are just telling to make a file of what all changes are there.. It wont change anything. it will just check and save the record.
+    python manage.py makemigration   
+To migrate and django provides some default tables -- to migrate use below commang
+    python manage.py migrate
+
+Now use this link you will have different errors --as we have used the migrate command and so it will have all the default tables.
+    /admin     ##now error will be Please enter the correct username and password for a staff account. Note that both fields may be case-sensitive.
+
+Now we have to create user .. it can be superuser too.
+    python3 manage.py createsuperuser   #this info user and pass will automatically be gone to db.sqlite3
+
+
+
+---------------------
+model defines our database
+
+python3 manage.py makemigration     #this will just check changes and make a file .. it wont make any changes yet.
+    
+    #when you make migration with this -- it will show No changes detected. -- SO HAVE TO TAKE CARE OF TWO THINGS FIRST..
+        #1. Register your model first in admin of your App
+        #2. Register your App - Copy the Name from the Apps and go to settings And paste it in the Installed APP home.apps.HomeConfig
+
+Now when you Run makmigration   ---  it will generate migration file.. But wont make change to anything there. It will just check and generate the file if any changes
+
+Now you can migrate
+
+python3 manage.py migrate        ---- This will create table now. -- you can check that in Django Admin too. The Table is there.
+
+Adding Records
+NOT RECOMMENDED
+    #Now you can add Record directly from Admin of Django
+BEST WAY or IDEAL WAY
+    #Now write logic of Adding Record in the Views
+
+
+
+start shell to run queries or filter data or Records
+    python3 manage.py shell
+    #this will start the shell and then you can use the queries to get the record.
+Can filter data in shell with the below commands
+    Contact.objects. anymethod you want to use.. after this..  So that you can get the data from the Contact object 
+        We can also get the last value or first value of the object or we can also get all the data with the help of different methods. etc.
+    this you can check in the django documents of queries.
+
+    
+--------------------------------------------------------------------
+
+Starting new project again.
+
+start project with the command
+now makemigration 
+Now migratet
+
+Creat app with startapp command with name - for ex. home
+now register the app home  - copy and paste it from the apps.py of apps to settings installed app section with . . . 'home.apps.HomeConfig',
+
+Add domains if necessary in Allowed Hosts. - if not that is fine.
+
+Now create a static folder and templates folder
+
+Now search static DIRs in Django
+    - Set the static DIRs
+        - copy that from Django documents STATICFILES_DIRS = [
+                        os.path.join(BASE_DIR , "static"),  
+                            #'/var/www/static/',
+]       - paste it into settings file at last.
+
+Now Set the templates DIRs the same way as static
+    BASE_DIR / "templates"   --- the same way add this into DIRs of Template []
+    os.path.join(BASE_DIR , "templates")   #this one is correct
+
+
+Now start creating templates in templates folder.
+    like..
+        index.html
+        login.html   -- If user is not logged in .. We send him/her to the login page
+
+Now after creating basic templates -- add urls .. 
+    - Go to project's url file.. and include-- ad   d path   like this.. path('', include('home.urls')),  this means include all the urls from the home app.
+    - Now go to home and make urls.py if not there.
+    - copy the same section from the urls.py of project to urls.py of app or home in this case.
+        - and make changes accordingly.  like add these for home and login logout  as well. delet all others
+                path('', views.index, name="home"),
+                path('login', views.login, name="login"),
+                path('logout', views.logout, name="logout"),
+now def request and render templates in views.py
+    render all templates as below AND CREATE VIEWS
+        def index(request):
+            return render(request, 'index.html' )
+
+        def login(request):
+            return render(request, 'login.html' )
+
+        def logout(request):
+            return render(request, 'index.html' )
+
+
+Now Do the authentication then use the redirect -- Or create an user
+ how to create user in Django
+
+ first create a superuser 
+ 
+Now go to django admin panel and Create user.
+
+Now use auth method from the Django Doc like Login , logout , Auh to check if the username and password are correct and ready to go.
+
+
+                                                            
+
+
+
+
