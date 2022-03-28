@@ -144,7 +144,7 @@ Now Do the authentication then use the redirect -- Or create an user
 
  first create a superuser 
  
-Now go to django admin panel and Create user.
+Now go to django admin panel and Create user.   
 
 Now use auth method from the Django Doc like Login , logout , Auh to check if the username and password are correct and ready to go.
 

@@ -14,7 +14,7 @@ Functionalities and Conditions:
 - Email address must be unique.
 - Stored password must be encrypted when stored in DB.
 - When account gets created we need to send an email to created account to verify email. User will click on link given in email and account will be verified.
-- When edit account detail and email changed than account status should marked as pending verification too.
+- When edit account detail and email changed than account status should be marked as pending verification too.
 - List users should be in HTML table with pagination.
 - List users page should show Full Name, Email and Status ( Verified/Pending ) and edit,delete button.
 - When click on delete button than that specific account should be deleted from DB.
