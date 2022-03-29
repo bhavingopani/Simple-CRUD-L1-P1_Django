@@ -19,7 +19,12 @@
 
 
 <button type="button" class="btn btn-primary">Create User</button>
-<button type="button" class="btn btn-primary">Logout</button> 
+<button type="button" class="btn btn-primary" href="/loginUser.html" >Logout</button> 
+
+{% comment %} 
+{% for user in users %}
+        <span>{{ user.first_name}} + {{ user.last_name }}</span>
+{% endfor %} {% endcomment %}
 
 
 <table class="table">
@@ -33,29 +38,31 @@
       </tr>
     </thead>
     <tbody>
+      {% for user in users %}
       <tr>
           {% comment %} this is not the number this will be db id number {% endcomment %}
         <th scope="row">1</th>
-        <td>Rajesh Patel</td>
-        <td>r_patel@gmail.com</td>
-        <td>Vrified</td>
+        <td>{{ user.first_name}} {{user.last_name }}</td>
+        <td>{{ user.email}}</td>
+        <td> {{email_status}}</td>
         <td>
             <button type="button" class="btn btn-primary">Edit</button>
             <button type="button" class="btn btn-primary">Delet</button>
         </td>
       </tr>
-      <tr>
+      {% endfor %}
+      {% comment %} <tr>
           {% comment %} this is not the number this will be db id number {% endcomment %}
-        <th scope="row">2</th>
+        {% comment %} <th scope="row">2</th>
         <td>Mahesh Bhatt</td>
         <td>maheshbhatt@gmail.com</td>
         <td>Pending</td>
         <td>
             <button type="button" class="btn btn-primary">Edit</button>
             <button type="button" class="btn btn-primary">Delet</button>
-        </td>
+        </td> {% endcomment %}
 
-      </tr>
+      {% comment %} </tr> {% endcomment %} 
     </tbody>
   </table>
 
