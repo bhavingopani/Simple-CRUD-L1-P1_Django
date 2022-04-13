@@ -16,9 +16,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-
+  
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),    
     path('', include('simpleCrudApp.urls')),
-]
-
+    # commented as there were errors.. use this process later on.# path('simpleCrudApp/', include('django.contrib.auth.urls')), #referencing - this will allow us to use bunch of urls that comes with  applications that come with authentication.
+]   
+# FOLLOW THE VIDEO AND CREATE AUTH as per his
