@@ -149,7 +149,8 @@ Now go to django admin panel and Create user.
 Now use auth method from the Django Doc like Login , logout , Auh to check if the username and password are correct and ready to go.
 
 
-                                                            
+--------------
+Later - PREPARE MODULES FOR REPEAT work - so that development happens faster                                                        
 
 
 
