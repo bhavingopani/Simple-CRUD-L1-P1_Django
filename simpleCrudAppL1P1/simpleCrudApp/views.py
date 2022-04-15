@@ -1,10 +1,12 @@
 # from ast import Break
 # import email
 # from multiprocessing import context
-from ast import Not
-from collections import UserList
+# from ast import Not
+# from collections import UserList
+# from distutils.log import error
+# from black import err
 from distutils.log import error
-from black import err
+from attr import has
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from simpleCrudApp.models import CreateUser
@@ -12,6 +14,20 @@ from django.contrib.auth import login, logout, authenticate
 from cryptography.fernet import Fernet   #for encrypting password
 from django.core.paginator import Paginator
 from simpleCrudAppL1P1.forms import editforms
+from django.core.mail import send_mail
+# from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+# from .tokens import account_activation_token
+# from django.contrib.auth.models import User
+# from django.core.mail import EmailMessage
+# from django.utils.encoding import force_bytes, force_text
+from django.http import HttpResponse
+# from django.contrib.sites.shortcuts import get_current_site
+# from django.contrib.auth import get_user_model
+# from django.template.loader import render_to_string
+from django.contrib.auth import login, authenticate
+import random
+from django.utils.crypto import get_random_string
+
 
 # Create your views here.
 def index(request):
@@ -79,11 +95,21 @@ def createUser(request):   #next time check django form creation API.
         email = request.POST.get('email')
         password=request.POST.get('password') 
         confirm_password= request.POST.get('confirm_password')
-        
+
+
+        # hash =    random.randint(0,1000)
+        hashFirst = get_random_string(length=32)
+        email_status = "pending"
+        #the below is for checking if the email exists. we have to check if the email is already there in the database.
+        user_list = CreateUser.objects.all()
+
         #managing validation here in server or View.py .. 
         #Another way to manage validation is in template or html
         error_message = None
-
+        
+        for user in user_list:
+            if email == user.email:
+                error_message = "Email already exists in the system!"
         if(not first_name):
             error_message = "First Name is required!!"
         if(not email):
@@ -100,15 +126,97 @@ def createUser(request):   #next time check django form creation API.
                 password = request.POST.get('password') 
                 password = fernet.encrypt(password.encode()) #encyption and encoding of password
                 #decryption of password MUST NOT BE USED - its better to use forget password method instead of decypting the password and tell the user that this is your password.
-                createuser = CreateUser(first_name=first_name, last_name = last_name, email=email, password=password)    
-                messages.success(request, 'Your profile has been created successfully!')    
+                createuser = CreateUser(first_name=first_name, last_name = last_name, email=email, password=password, hash=hashFirst, email_status=email_status)    
+                messages.success(request, 'Your profile has been created successfully!')
+                    
                 createuser.save()
+                
+                
+                #after saving is done. Sending an email without token first. Token we will use to verify the email.
+                email_subject = 'Activate Your Email Account'
+                # for user in user_list:   #
+                email_message = f'Please click this link to activate your account  http://127.0.0.1:8000/activateUser/{email}/{hashFirst}'
+                #http://127.0.0.1:8000/activateUser/?email={email}&hashFirst={hashFirst}
+                to_email = email        
+                
+                send_mail(       #if we want some advanced features like cc , bcc and attatchements., we can use EmailMessage of django
+                    email_subject, #subject
+                    email_message, #message
+                    'testpatel456@gmail.com', #from email
+                    [to_email, 'gopani7874@gmail.com'], #to email #always in array
+                    fail_silently= False, #A boolean. When it’s False, send_mail() will raise an smtplib.SMTPException if an error occurs. See the smtplib docs for a list of possible exceptions, all of which are subclasses of SMTPException.
+                )
+
+                # print(email, hashFirst)
+                # user=createuser.save()
+                # user.is_active = False
+                # current_site = get_current_site(request)
+                # email_subject = 'Activate Your Account'
+                # email_message = render_to_string('email_template.html', {
+                #                     'user':user,
+                #                     'domain': current_site.domain,
+                #                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                #                     'token': account_activation_token.make_token(user),
+                #              })
+                # to_email = request.POST.get('email')
+                # send_mail(email_subject, email_message,'testpatel456@gmail.com',[to_email])
+
             else:    
                 messages.error(request, 'Password and Confirm password must be same')
         else:
             return render(request,'authenticate/createUser.html',{'error': error_message})
 
     return render(request, "authenticate/createUser.html")
+
+def activateUser(request, email, hashFirst):
+    #now matching the hash from the email activation link and the respective hash code from the link
+    if request.method == "GET":
+        # emailNew = request.GET.get('email')
+        # hashFirstNew = request.GET.get('hashFirst')
+        
+        user_list = CreateUser.objects.all()
+        for user in user_list:
+            # print(user.hash)
+            if user.email == email and user.hash == hashFirst:
+            # if user.email == email: 
+            # and user.hash == hashFirst:
+                # message = "Your account has been activated successfully!!"
+                user.email_status = "verified"
+                user.save() # this will update the same.
+                # return render(request, 'authenticate/activateUser.html',{'message':message})
+                # return redirect('home', {'message':message})
+                # return render(request, 'authenticate/home.html',{'message':message})
+                messages.success(request, 'Your account has been activated successfully!!')
+                return redirect('home')
+            else:
+                messages.error(request, 'Sorry!! Your account could not be verified. Please contact us at testpatel456@gmail.com')
+                # messages.error = "Sorry!! Your account could not be verified. Please contact us at testpatel456@gmail.com"
+                # return render(request, 'authenticate/activateUser.html',{'message':message})
+                # return redirect('home', {'message':message})
+                # return render(request, 'authenticate/home.html',{'message':message})
+                return redirect('home')
+
+
+
+
+
+# def activateUser(request, uidb64, token):
+#     User = get_user_model()
+#     try:
+#         uid = force_text(urlsafe_base64_decode(uidb64))
+#         user = User.objects.get(pk=uid)
+#     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+#         user = None
+#     if user is not None and account_activation_token.check_token(user, token):
+#         user.is_active = True
+#         user.save()
+#         return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+#     else:
+#         return HttpResponse('Activation link is invalid!')
+
+
+
+
 
 def editUser(request, user_id ): #we are passing user id that we have passed and mentioned in the urls.py 
     #user_list = CreateUser.objects.all() this will grab all from the database but what we want is WE just want respective id and respective record
@@ -127,9 +235,17 @@ def updateUser(request, user_id):
         form = editforms(request.POST, instance=update_user) #takes two parameter 
         if form.is_valid():
             form.save()
+            new_updated_user=CreateUser.objects.get(pk=user_id)
+            if update_user.email != new_updated_user.email and update_user.email_status == "verified" :
+                new_updated_user.email_status = "pending"
+                new_updated_user.save()
+
+WRITE DOWN THE LOGIC AGAIN --- FOR REVERIFICATION and ALL -- CHECK EDIT after the FORM IS VERIFIED>
+
+
             messages.success(request, "User updated successfully")
             return render(request, "authenticate/editUser.html",{'current_user':update_user}) 
-        
+            
         
         
         # if request.method == "POST":
@@ -151,10 +267,37 @@ def updateUser(request, user_id):
         # return redirect("http://127.0.0.1:8000/")
             # return render(request, "authenticate/home.html" )
 
+
+
+
+# def activateUser(request,uidb64,token):
+#     try:
+#         uid = force_text(urlsafe_base64_decode(uidb64))
+#         user = User.objects.get(pk=uid)
+#     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+#         user = None
+#     if user is not None and account_activation_token.check_token(user, token):
+#         user.is_active = True
+#         user.save()
+#         login(request, user)
+#         # return redirect('home')
+#         return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+#     else:
+#         return HttpResponse('Activation link is invalid!')
+#     # return render('home')
+
+
+
+
+
 def deleteUser(request, user_id):
     current_user = CreateUser.objects.get(pk=user_id)   #decidig which one we are going to delete.
     current_user.delete()
     return redirect('home')
+
+
+
+
 
 
 

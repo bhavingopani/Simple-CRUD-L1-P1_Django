@@ -53,7 +53,7 @@
         <td>{{user.id}} </td>
         <td>{{ user.first_name}} {{user.last_name }}</td>
         <td>{{ user.email}}</td>
-        <td>{{email_status}}</td>
+        <td>{{user.email_status}}</td>
         <td>
           {% comment %} space between usl   'editUser'  and user.id  is fine..  {% endcomment %}
           <a href="{% url 'editUser' user.id %}" class="btn btn-outline-secondary btn-sm">   
@@ -104,6 +104,16 @@
     <a href="?page={{users.paginator.num_pages}}">Last &raquo</a>
   {% endif %}
 
+  {% comment %} From activation - after activation  {% endcomment %}
+  {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-primary alert-dismissible fade show my-0" role="alert">
+      {% comment %} using for loop as we have to run through the loop to find out of messsages {% endcomment %}
+    <strong>{{ message }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor%}
+  {% endif %} 
 
   <br/><br/><br/><br/>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>

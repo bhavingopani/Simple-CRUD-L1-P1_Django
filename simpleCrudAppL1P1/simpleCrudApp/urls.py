@@ -11,4 +11,15 @@ urlpatterns = [  #this will send the respective request or matching request to v
     # path('editUser/', views.editUser, name="editUser"), #/id can be used here too. will do that later
     path('editUser/<user_id>',views.editUser, name="editUser"),
     path('updateUser/<user_id>',views.updateUser,name="updateUser"),
-    path('deleteUser/<user_id>', views.deleteUser,name="deleteUser"), ]
+    path('deleteUser/<user_id>', views.deleteUser,name="deleteUser"),
+    # path('activateUser/?email={email}&hashFirst={hashFirst}', views.activateUser, name="activateUser"),
+    # path('activateUser/<email>/<hashFirst>/', views.activateUser, name="activateUser"),
+    path ('activateUser/<email>/<hashFirst>', views.activateUser, name="activateUser"),
+    # path('activateUser/<uidb64>/<token>',views.activateUser, name='activateUser' ),
+    # path(   )
+ ]
+
+#<> this already means in the urlpatterns that its an argument - and can be used as variables.
+
+# ?email=<email>&hashFirst=<hashFirst>
+# ?email={email}&hashFirst={hashFirst}

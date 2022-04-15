@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'z@w11w^4-uzurhhdtj3tg)u-1fl5ljalahel0dtyq6wpq*myf@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True     #THIS SHOULD BE FALSE WHEN YOU ARE IN PRODUCTION OR WORKING WITH LIVE BRANCH OR LIVE PROJECT as this will show all the things when throughs an error when true. If its False it wont show much details to the end user which is good for security
 
 ALLOWED_HOSTS = []
 
@@ -104,6 +104,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -126,3 +127,26 @@ STATICFILES_DIRS = (
 )
 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+#Email configuration - by me
+
+    #if you want to send email from local -- then have to configure SMTP(simple mail transfer protocol)
+    #we will be using gmail to send the email - gmail will be in the middle here.. so will have to give access to any gmail with userid and password
+    #so here SMTP is a resource - that will be working as resource 
+    #when we do that for server -- that we make the main hosting as SMTP -- even without that we can send email -- but in local system its mandatory
+
+    #turn on the less secure app otherwise gmail will not allow to use SMTP and will not allow us to send email via the respective email
+
+#there are a lot of configuration and parameter -- we dont need all of them.
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  #Required for configuring the libraby
+EMAIL_HOST = 'smtp.gmail.com'  #gmail host name -- for gmail only. - it will be different for server.
+EMAIL_PORT = 587  # when using local system and gmail - use 587 // #But when using live system -https-  the PORT is different.  465 -- mostly used when we do that on live server with https
+EMAIL_HOST_USER = 'testpatel456@gmail.com' #which email id to be used to send email via smtp
+EMAIL_HOST_PASSWORD = 'Test@123'  #password of the email
+EMAIL_USE_TLS = True  # by default its False -- Whether to use a TLS (secure) connection when talking to the SMTP server.#this is generally for local -- and when port 587 -
+                    #SSL and TLS, which makes the connection, and the content of your emails are secure during the transmission.
+
+# SOLVE THE ERROR --- OR CHECK THAT EMAIL SENDING AGAIN of CODEMY.com
+
+
+#Now we can use email - but before that you have to use librabry - in views.py
