@@ -6,6 +6,7 @@
 # from distutils.log import error
 # from black import err
 from distutils.log import error
+import email
 from attr import has
 from django.contrib import messages
 from django.shortcuts import redirect, render
@@ -143,7 +144,7 @@ def createUser(request):   #next time check django form creation API.
                     email_subject, #subject
                     email_message, #message
                     'testpatel456@gmail.com', #from email
-                    [to_email, 'gopani7874@gmail.com'], #to email #always in array
+                    [to_email], #to email #always in array
                     fail_silently= False, #A boolean. When it’s False, send_mail() will raise an smtplib.SMTPException if an error occurs. See the smtplib docs for a list of possible exceptions, all of which are subclasses of SMTPException.
                 )
 
@@ -230,21 +231,72 @@ def editUser(request, user_id ): #we are passing user id that we have passed and
     return render(request, "authenticate/editUser.html",{'current_user':current_user})
 
 def updateUser(request, user_id):
-        
+    if request.method == "POST":
         update_user = CreateUser.objects.get(pk=user_id) #finding the particular database id here.
-        form = editforms(request.POST, instance=update_user) #takes two parameter 
-        if form.is_valid():
-            form.save()
-            new_updated_user=CreateUser.objects.get(pk=user_id)
-            if update_user.email != new_updated_user.email and update_user.email_status == "verified" :
-                new_updated_user.email_status = "pending"
-                new_updated_user.save()
+        # form = editforms(request.POST, instance=update_user) #takes two parameter 
+        # if form.is_valid():
+        #     form.save()
+            # new_updated_user=CreateUser.objects.get(pk=user_id)
+            # form = editforms(request.POST, instance=new_updated_user)
+            # if update_user.email != new_updated_user.email:
+            # if form.cleaned_data['email'] != new_updated_user.email: 
+          
+                # if form.is_valid(): 
+                    # new_updated_user.email_status = 'pending'
+                    # new_updated_user.save()
+                    # # form.save()
+        update_user.first_name = request.POST.get('first_name')
+        update_user.last_name = request.POST.get('last_name')
+        if update_user.email != request.POST.get('email') and update_user.email_status == "verified":
+            update_user.email = request.POST.get('email')
+            update_user.email_status = "pending"
+            update_user.hash = get_random_string(length=32)
+            #Sending email for activation again   
+            email_subject = 'Your Email Changed: So Please Activate Your Account Again'
+            email_message = f'Please click this link to activate your account  http://127.0.0.1:8000/activateUser/{update_user.email}/{update_user.hash}'
+            to_email = update_user.email        
+                
+            send_mail(       
+                    email_subject, #subject
+                    email_message, #message
+                    'testpatel456@gmail.com', #from email
+                    [to_email], #to email #always in array
+                    fail_silently= False, #A boolean. When it’s False, send_mail() will raise an smtplib.SMTPException if an error occurs. See the smtplib docs for a list of possible exceptions, all of which are subclasses of SMTPException.
+                )
+        elif update_user.email != request.POST.get('email') and update_user.email_status == "pending":
+            update_user.email = request.POST.get('email')
+            update_user.hash = get_random_string(length=32)
+            email_subject = 'Your Email Changed: So Please Activate Your Account'
+            email_message = f'Please click this link to activate your account  http://127.0.0.1:8000/activateUser/{update_user.email}/{update_user.hash}'
+            to_email = update_user.email
+            
+            send_mail(       
+                    email_subject, #subject
+                    email_message, #message
+                    'testpatel456@gmail.com', #from email
+                    [to_email], #to email #always in array
+                    fail_silently= False, #A boolean. When it’s False, send_mail() will raise an smtplib.SMTPException if an error occurs. See the smtplib docs for a list of possible exceptions, all of which are subclasses of SMTPException.
+                )
+        
+        else:
+            update_user.email = request.POST.get('email')
+        
+        update_user.save()
+       
 
-WRITE DOWN THE LOGIC AGAIN --- FOR REVERIFICATION and ALL -- CHECK EDIT after the FORM IS VERIFIED>
 
 
-            messages.success(request, "User updated successfully")
-            return render(request, "authenticate/editUser.html",{'current_user':update_user}) 
+
+
+        # new_updated_user=CreateUser.objects.get(pk=user_id)
+
+                
+                # last_name
+                # email 
+
+
+        messages.success(request, "User updated successfully")
+        return render(request, "authenticate/editUser.html",{'current_user':update_user}) 
             
         
         
